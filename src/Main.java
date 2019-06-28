@@ -1,8 +1,7 @@
+import ParserPackage.Parser;
 import org.json.simple.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -24,6 +23,24 @@ public class Main {
                     result.put("result", stringBuilder.toString());
                     socketHandler.write(result.toString());
                 } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (data.getType().equals("psl")) {
+                String psl = (String) data.getMap().get("command");
+                try {
+                    FileWriter fileWriter = new FileWriter("program.psl");
+                    fileWriter.write(psl);
+                    fileWriter.close();
+                    PrintStream systemOut = System.out;
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    System.setOut(new PrintStream(out));
+                    Parser.interpret("program.psl");
+                    System.setOut(systemOut);
+                    JSONObject result = new JSONObject();
+                    result.put("type", "result");
+                    result.put("result", out.toString());
+                    socketHandler.write(result.toString());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
