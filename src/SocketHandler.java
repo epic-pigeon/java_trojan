@@ -60,7 +60,7 @@ public class SocketHandler {
         this.onDataListener = onDataListener;
     }
 
-    private static String getMACAddress() {
+    public static String getMACAddress() {
         InetAddress ip;
         try {
             ip = InetAddress.getLocalHost();

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        System.out.println(SocketHandler.getMACAddress());
+
         SocketHandler socketHandler = SocketHandler.connect("3.89.196.174", 8080);
         socketHandler.setOnDataListener(data -> {
             if (data.getType().equals("command")) {
