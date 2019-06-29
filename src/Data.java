@@ -8,11 +8,14 @@ public class Data {
     private String data;
     private Map<String, Object> map;
     private String type;
+    private int id;
 
     public Data(String data) throws ParseException {
+        System.out.println(data);
         this.data = data;
         map = (JSONObject) new JSONParser().parse(data);
         type = (String) map.get("type");
+        id = (int) (long) map.get("id");
     }
 
     public String getData() {
@@ -25,6 +28,10 @@ public class Data {
 
     public String getType() {
         return type;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

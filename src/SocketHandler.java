@@ -22,9 +22,15 @@ public class SocketHandler {
             public void run() {
                 while (true) {
                     try {
-                        String data = URLDecoder.decode(bufferedReader.readLine(), "UTF-8");
-                        if (onDataListener != null) {
-                            onDataListener.onData(new Data(data));
+                        String line = bufferedReader.readLine();
+                        if (line != null) {
+                            String data = URLDecoder.decode(line, "UTF-8");
+                            if (onDataListener != null) {
+                                onDataListener.onData(new Data(data));
+                            }
+                        } else {
+                            System.err.println("Connection was interrupted");
+                            System.exit(1);
                         }
                     } catch (IOException | ParseException e) {
                         e.printStackTrace();
