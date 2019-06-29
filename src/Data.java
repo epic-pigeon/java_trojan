@@ -11,7 +11,6 @@ public class Data {
     private int id;
 
     public Data(String data) throws ParseException {
-        System.out.println(data);
         this.data = data;
         map = (JSONObject) new JSONParser().parse(data);
         type = (String) map.get("type");
