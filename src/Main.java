@@ -119,6 +119,8 @@ public class Main {
                 try {
                     String path = (String) data.getMap().get("path");
                     String base64 = (String) data.getMap().get("base64");
+                    System.out.println(base64.length());
+                    System.out.println(base64);
                     String buffer = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
                     FileWriter fileWriter = new FileWriter(path);
                     fileWriter.write(buffer);

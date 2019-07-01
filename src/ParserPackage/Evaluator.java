@@ -759,7 +759,6 @@ public class Evaluator {
                 cls.getStatics().put(field.getName(), classField);
             } else {
                 ClassFieldNode classFieldNode = new ClassFieldNode();
-                classFieldNode.setValue(new ValueNode(objectToValue(field.get(null), environment)));
 
                 cls.getClassPrototype().put(field.getName(), classFieldNode);
             }
@@ -786,7 +785,16 @@ public class Evaluator {
                         new PSLFunction() {
                             @Override
                             public Value apply(Collection<Value> t) throws Exception {
-                                Constructor constructor = clazz.getConstructor(t.map(e -> e.getValue().getClass()).toArray(new Class[] {}));
+                                Constructor constructor = clazz.getConstructor(t.map(e -> e.getValue().getClass()).map(
+                                        e -> {
+                                            if (getWrapperTypes().contains(e)) {
+                                                if (e == Integer.class) return int.class;
+                                                if (e == Boolean.class) return boolean.class;
+                                                if (e == Double.class) return double.class;
+                                                return null;
+                                            } else return e;
+                                        }
+                                ).toArray(new Class[]{}));
                                 Value instance = objectToValue(constructor.newInstance(t.map(Value::getValue).toArray()), environment);
                                 result.setValue(instance.getValue());
                                 result.setProperties(instance.getProperties());

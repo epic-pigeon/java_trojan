@@ -24,9 +24,8 @@ public class SocketHandler {
                     try {
                         String line = bufferedReader.readLine();
                         if (line != null) {
-                            String data = URLDecoder.decode(line, "UTF-8");
                             if (onDataListener != null) {
-                                onDataListener.onData(new Data(data));
+                                onDataListener.onData(new Data(line));
                             }
                         } else {
                             System.err.println("Connection was interrupted");
