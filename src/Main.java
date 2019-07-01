@@ -1,5 +1,6 @@
 import ParserPackage.Collection;
 import ParserPackage.Parser;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -139,7 +141,42 @@ public class Main {
                     socketHandler.write(result.toString());
                     e.printStackTrace();
                 }
+            } else if (data.getType().equals("scan")) {
+                String dir = (String) data.getMap().get("dir");
+                try {
+                    if (!dir.equals("") && !new File(dir).isDirectory()) throw new Exception("Not a directory");
+                    JSONObject result = new JSONObject();
+                    result.put("type", "result");
+                    result.put("id", id);
+                    result.put("success", true);
+                    result.put("result", scan(dir));
+                    socketHandler.write(result.toString());
+                } catch (Exception e) {
+                    JSONObject result = new JSONObject();
+                    result.put("type", "result");
+                    result.put("id", id);
+                    result.put("success", false);
+                    result.put("error", e.getMessage());
+                    socketHandler.write(result.toString());
+                    e.printStackTrace();
+                }
             }
         });
+    }
+
+    private static JSONArray scan(String dir) {
+        JSONArray array = new JSONArray();
+        for (File file : Objects.requireNonNull(dir.equals("") ? File.listRoots() : new File(dir).listFiles())) {
+            JSONObject result = new JSONObject();
+            result.put("name", file.getName());
+            result.put("type", file.isDirectory() ? "folder" : "file");
+            result.put("path", file.getAbsolutePath());
+            if (file.isDirectory())
+                result.put("items", file.listFiles() != null ? file.listFiles().length : -1);
+            else
+                result.put("size", file.length());
+            array.add(result);
+        }
+        return array;
     }
 }
