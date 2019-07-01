@@ -42,7 +42,7 @@ public class SocketHandler {
         init.put("type", "init");
         init.put("mac", getMACAddress());
         init.put("os", System.getProperty("os.name")    );
-        socket.getOutputStream().write(init.toString().getBytes());
+        write(init.toString());
     }
 
     public static SocketHandler connect(String host, int port) throws IOException {
@@ -54,8 +54,16 @@ public class SocketHandler {
         void onData(Data data);
     }
 
-    public void write(String data) throws IOException {
-        socket.getOutputStream().write(data.getBytes());
+    public void write(String data) {
+        write(data.getBytes());
+    }
+
+    public void write(byte[] data) {
+        try {
+            new DataOutputStream(socket.getOutputStream()).write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public SocketHandler.OnDataListener getOnDataListener() {
