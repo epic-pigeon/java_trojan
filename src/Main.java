@@ -19,6 +19,12 @@ import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        if (!checkInternetConnection()) {
+            System.err.println("Internet connection absent, awaiting...");
+            while (!checkInternetConnection()) {}
+            System.out.println("Connection established!");
+        }
+
         System.out.println(SocketHandler.getMACAddress());
 
         SocketHandler socketHandler = SocketHandler.connect("3.89.196.174", 8080);
@@ -239,5 +245,13 @@ public class Main {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+    private static boolean checkInternetConnection() {
+        try {
+            Process process = java.lang.Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            return process.waitFor() == 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
