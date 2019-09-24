@@ -55,7 +55,6 @@ public class SocketHandler {
     }
 
     public void write(String data) {
-        System.out.println(data);
         write(data.getBytes(StandardCharsets.UTF_8));
     }
 

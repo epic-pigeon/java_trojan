@@ -135,15 +135,11 @@ public class Main {
                     }
                 }).start();
             } else if (data.getType().equals("write_file")) {
-
                 new Thread(() -> {
                     try {
                         String path = (String) data.getMap().get("path");
                         String base64 = (String) data.getMap().get("base64");
-                        String buffer = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
-                        FileWriter fileWriter = new FileWriter(path);
-                        fileWriter.write(buffer);
-                        fileWriter.close();
+                        Files.write(Paths.get(new File(path).toURI()), Base64.getDecoder().decode(base64));
                         JSONObject result = new JSONObject();
                         result.put("type", "result");
                         result.put("id", id);
