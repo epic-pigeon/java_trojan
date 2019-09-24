@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class SocketHandler {
     private Socket socket;
@@ -16,7 +17,7 @@ public class SocketHandler {
 
     private SocketHandler(Socket socket) throws IOException {
         this.socket = socket;
-        bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         new Thread() {
             @Override
             public void run() {
@@ -54,7 +55,8 @@ public class SocketHandler {
     }
 
     public void write(String data) {
-        write(data.getBytes());
+        System.out.println(data);
+        write(data.getBytes(StandardCharsets.UTF_8));
     }
 
     public void write(byte[] data) {

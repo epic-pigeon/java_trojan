@@ -37,7 +37,7 @@ public class Main {
                 new Thread(() -> {
                     try {
                         Process process = processBuilder.start();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), "CP866"));
                         StringBuilder stringBuilder = new StringBuilder();
                         String line;
                         while ((line = reader.readLine()) != null) stringBuilder.append(line).append("\n");
