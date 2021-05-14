@@ -1,6 +1,5 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import org.omg.IOP.Encoding;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
